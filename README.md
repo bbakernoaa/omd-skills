@@ -2,7 +2,7 @@
 
 **Portable AI-agent workflows for science and engineering**
 
-OMD Skills is a collection of reusable [Agent Skills](https://agentskills.io) for ocean modeling and
+OMD Skills is a collection of reusable [Agent Skills](https://agentskills.io) for ocean and atmosphere modeling and
 broader scientific and engineering workflows, maintained by the NOAA Ocean Modeling Division (OMD).
 The catalog can be used with Claude Code, Codex, Cursor, OpenCode, Gemini CLI, and LangChain Deep
 Agents. Individual skills may still depend on client-specific features or external tools.
