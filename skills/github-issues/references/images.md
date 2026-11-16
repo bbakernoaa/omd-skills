@@ -1,5 +1,7 @@
 # Images in Issues and Comments
 
+> Tool names and CLI commands below are examples. Prefer an available authorized GitHub integration; use `gh` only when installed and authenticated. If the required capability is unavailable, report that limitation.
+
 How to embed images in GitHub issue bodies and comments programmatically via the CLI.
 
 ## Methods (ranked by reliability)

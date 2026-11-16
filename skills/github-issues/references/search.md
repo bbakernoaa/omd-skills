@@ -1,5 +1,7 @@
 # Advanced Issue Search
 
+> Tool names and CLI commands below are examples. Prefer an available authorized GitHub integration; use `gh` only when installed and authenticated. If the required capability is unavailable, report that limitation.
+
 The `search_issues` MCP tool uses GitHub's issue search query format for cross-repo searches, supporting implicit-AND queries, date ranges, and metadata filters (but not explicit OR/NOT operators).
 
 ## When to Use Search vs List vs Advanced Search
