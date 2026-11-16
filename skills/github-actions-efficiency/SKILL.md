@@ -9,7 +9,7 @@ Use this skill as a lean entrypoint for GitHub Actions efficiency work. Inspect 
 
 If no workflows exist yet, load [`references/actions.md`](./references/actions.md) and define a baseline before proceeding with the steps below.
 
-**If shell or `gh` CLI access is unavailable:** ask the user to paste `.github/workflows/` contents and `gh run list --limit 10` output. If only partial files are provided, note it: "Audit based on provided files only; some insights may be incomplete." Begin responses from files alone with: "**Static-only analysis** (not confirmed with live runs)."
+**If shell or `gh` CLI access is unavailable:** use an available authorized GitHub integration to inspect workflows and runs. If no suitable access is available, request the relevant workflow contents and run information. If only partial files are provided, note it: "Audit based on provided files only; some insights may be incomplete." Begin responses from files alone with: "**Static-only analysis** (not confirmed with live runs)."
 
 ## Use This Skill When
 

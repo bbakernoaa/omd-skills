@@ -1,6 +1,6 @@
 # Getting Started
 
-OMD Skills is a collection of reusable Agent Skills for ocean modeling and scientific workflows.
+OMD Skills is a collection of reusable Agent Skills for ocean and atmosphere modeling and broader scientific workflows.
 There is nothing to compile at the repository root.
 
 ## Clone The Repo
@@ -53,6 +53,9 @@ ln -s "$PWD/skill-search" "$SKILLS_DIR/skill-search"
 It discovers the catalog from a sibling `skills/` directory by default, or you can point it at another root with `--central-root` or the `SKILL_SEARCH_CENTRAL_ROOT` environment variable.
 
 ## Next Steps
+
+- Read [Instruction and Catalog Maintenance](instruction-maintenance.md) when changing instructions or reviewing domain guidance.
+- Read [Documentation Maintenance](documentation-maintenance.md) to use the OMD documentation skill and connect it to your repository's chosen GitHub Actions agent runner.
 
 - Read the root `README.md` for the full project overview.
 - See `CONTRIBUTING.md` for contribution guidelines and issue reporting.

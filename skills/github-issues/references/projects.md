@@ -1,5 +1,7 @@
 # Projects V2
 
+> Tool names and CLI commands below are examples. Prefer an available authorized GitHub integration; use `gh` only when installed and authenticated. If the required capability is unavailable, report that limitation.
+
 GitHub Projects V2 is managed via GraphQL. The MCP server provides three tools that wrap the GraphQL API, so you typically don't need raw GraphQL.
 
 ## Using MCP tools (preferred)

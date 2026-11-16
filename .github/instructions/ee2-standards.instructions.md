@@ -6,7 +6,9 @@ applyTo: "**/*"
 # NOAA NWS Office of Modeling and Development - EE2 Standards
 
 ## 1. Core Principles & Error Handling
-* **Strict EE2 Compliance:** All code must strictly conform to the NCO HPC Environment Equivalence (EE2) Implementation Standards.
+**Scope:** The requirements below apply to NCO delivery and WCOSS production; verify the current [NCEP standards](https://nws-hpc-standards.readthedocs.io/en/stable/) for the target. For RDHPCS, workstation, or research-only work, use applicable portable practices and do not claim full EE2 compliance. If the target materially changes advice and is unknown, ask or state the uncertainty.
+
+* **EE2 Compliance:** For NCO delivery, apply the current NCO standards appropriate to the task.
 * **Reference Documentation:** For authoritative guidance, see the [NWS HPC Standards documentation](https://nws-hpc-standards.readthedocs.io/en/stable/).
 * **Descriptive Error Messages:** Fatal errors must print a descriptive message beginning strictly with `FATAL ERROR:`. Warnings or non-fatal messages must begin with `WARNING:`.
 * **Zero False Errors:** Eliminate false errors in output logs (e.g., suppressing standard "No such file or directory" or syntax errors). Output must be clean.
@@ -48,5 +50,5 @@ Code must adhere strictly to the NCO multi-tiered scripting architecture. Variab
 * **Interpreted Scripts (Bash/Python):**
   * Rely on the `prod_util` module to add utilities to the user's `$PATH`.
   * Never alter the `$PATH` by appending `.` or `$USHmodel`.
-  * For Python, suppress `FutureWarnings` to prevent operational log clutter. Never rely on the system Python; always use the module system.
+  * For Python, follow the target environment and investigate warnings; suppress only a specific understood warning when justified.
 * **Docblocks:** All source files and scripts must include a standard NCO DOCBLOCK header (Program Name, Author, Abstract, History Log, Usage, Input/Output files).

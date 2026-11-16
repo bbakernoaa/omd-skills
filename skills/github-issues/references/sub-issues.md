@@ -1,5 +1,7 @@
 # Sub-Issues and Parent Issues
 
+> Tool names and CLI commands below are examples. Prefer an available authorized GitHub integration; use `gh` only when installed and authenticated. If the required capability is unavailable, report that limitation.
+
 Sub-issues let you break down work into hierarchical tasks. Each parent issue can have up to 100 sub-issues, nested up to 8 levels deep. Sub-issues can span repositories within the same owner.
 
 ## Recommended Workflow

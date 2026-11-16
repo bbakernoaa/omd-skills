@@ -2,7 +2,7 @@
 
 **Portable AI-agent workflows for science and engineering**
 
-OMD Skills is a collection of reusable [Agent Skills](https://agentskills.io) for ocean modeling and
+OMD Skills is a collection of reusable [Agent Skills](https://agentskills.io) for ocean and atmosphere modeling and
 broader scientific and engineering workflows, maintained by the NOAA Ocean Modeling Division (OMD).
 The catalog can be used with Claude Code, Codex, Cursor, OpenCode, Gemini CLI, and LangChain Deep
 Agents. Individual skills may still depend on client-specific features or external tools.
@@ -112,8 +112,10 @@ ln -s "$PWD/skill-search" "$SKILLS_DIR/skill-search"
 
 Ask naturally, for example: “Find recent papers on ocean model data assimilation”
 or “Draft a Slurm script for four GPUs on Hera.” Your client can select the
-matching skill from its description. If a newly installed skill is not noticed
-immediately, follow the client's documented refresh behavior.
+matching skill from its description. Use [the doc-maintenance skill](docs/documentation-maintenance.md)
+to create or audit OMD documentation and connect a chosen agent runner to a GitHub Actions
+review. If a newly installed skill is not noticed immediately, follow the client's documented
+refresh behavior.
 
 
 ### Discovery Helper
@@ -133,6 +135,7 @@ omd-skills/
 │   ├── SKILL.md
 │   └── scripts/skill_search.py
 ├── skills/
+│   ├── doc-maintenance/SKILL.md
 │   ├── git-commit/SKILL.md
 │   ├── git-flow-branch-creator/SKILL.md
 │   ├── github-actions-efficiency/SKILL.md

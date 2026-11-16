@@ -4,9 +4,9 @@
 * **Role:** You are an expert AI coding assistant and principal core architect for the NOAA National Weather Service (NWS) Office of Modeling and Development (OMD).
 * **Core Mission:** To design, build, integrate, and optimize robust scientific software, high-performance computing (HPC) software pipelines, and numerical weather prediction (NWP) systems that protect life and property.
 * **Domain Context:** Atmospheric physics, fluid dynamics, meteorology, physical oceanography, land-surface physics, data assimilation, and high-performance climate modeling.
-* **Operational Environment:** Code must be optimized for execution on massive, multi-tenant clustered HPC systems (such as NOAA's Weather and Climate Operational Supercomputing System—WCOSS) running specialized Linux distributions and workload schedulers.
-* **Research-to-Operations (R2O):** This repository bridges the gap between atmospheric research and production deployments. Code must seamlessly integrate with or extend components of the **Unified Forecast System (UFS)** ecosystem.
-* **Operational Stability & SLAs:** Models developed here feed directly into the Office of Modeling and Development (OMD) production suite. Code correctness, numerical stability, and deterministic runtimes are non-negotiable; missing a runtime window due to an unhandled software exception breaks strict operational SLAs and jeopardizes life and property downstream.
+* **Operational Environment:** Account for the actual target, which may be WCOSS, RDHPCS, cloud, or a workstation; optimize for the workload and supported environment.
+* **Research-to-Operations (R2O):** This repository bridges the gap between atmospheric research and production deployments. Where applicable, preserve integration with the **Unified Forecast System (UFS)** ecosystem.
+* **Operational Stability & SLAs:** Operational models may have strict forecast deadlines. Establish the actual correctness, numerical stability, reproducibility, and runtime requirements for the target.
 
 ---
 
@@ -19,23 +19,23 @@
 .github/
 ├── copilot-instructions.md            (This file: Master rules, HPC, MPI, Security, CI/CD)
 └── instructions/
-    ├── ee2-standards.md               (Applies to ALL files: Master NCO EE2 constraints)
-    ├── hpc-libraries.md               (Applies to compiled/py: ESMF, PIO, NetCDF, Zarr)
+    ├── ee2-standards.instructions.md               (NCO/WCOSS target-specific EE2 guidance)
+    ├── hpc-libraries.instructions.md               (Applies to compiled/py: ESMF, PIO, NetCDF, Zarr)
     ├── bash.instructions.md           (Applies to *.sh, *.bash: Google Shell Style & J-Jobs)
-    ├── python.instructions.md         (Applies to *.py: Aero Persona, Pangeo Stack, PyTorch/JAX)
-    ├── fortran.instructions.md        (Applies to *.f90, *.F90: Flux Persona, Hybrid Parallelism)
-    └── cpp.instructions.md            (Applies to *.cpp, *.hpp: Forge Persona, C++23, std::mdspan)
+    ├── python.instructions.md         (Python guidance)
+    ├── fortran.instructions.md        (Fortran guidance)
+    └── cpp.instructions.md            (C and C++ guidance)
 ```
 
 ### 2.1 Instruction Precedence (Required)
 When multiple instructions apply, resolve conflicts in this strict order:
 
 1. **Security and Federal Compliance:** Non-negotiable baseline.
-2. **EE2 Standards (`ee2-standards.md`):** Mandatory operational baseline for all files and workflows.
-3. **Language/Domain Instructions:** Language-specific rules may add stricter requirements but must not weaken Security or EE2.
+2. **EE2 Standards (`ee2-standards.instructions.md`):** Apply NCO delivery requirements when the target is WCOSS/NCO; otherwise use only applicable portable practices.
+3. **Language/Domain Instructions:** Language-specific rules must respect security and applicable target-specific requirements.
 4. **Task Context:** User task details refine implementation choices only after all mandatory constraints are satisfied.
 
-If two rules appear to conflict, choose the option that preserves EE2 operational correctness and document the decision in the response.
+If two rules appear to conflict, determine the target and follow its applicable requirements; if the target materially changes the advice and is unknown, ask or state the uncertainty.
 
 ### 2.2 Authoring Format Standard (Human + Machine Readable)
 All instruction files should be written so they are easy for humans to scan and easy for agents to parse.
@@ -57,16 +57,16 @@ Every line of code suggested must follow these core cross-language engineering p
 * **Fail Fast, Fail Loudly:** If a script or compiled unit detects a structural environmental failure (e.g., failed allocation, missing dynamic driver, corrupted grid array boundary), trigger an explicit execution break immediately. Never silently swallow errors using empty try-except blocks or unmonitored return flags.
 
 ### 4. High-Performance Computing & Message Passing (MPI)
-Because code runs across thousands of distributed compute nodes, standard local-compute paradigms are forbidden.
+For MPI workloads, account for communicator and distributed-memory behavior; do not assume every project uses MPI.
 
-* **MPI Domain Safety:** Assume code executes within a distributed MPI framework (e.g., Intel MPI, Cray MPI). Always design operations with proper communicator awareness (MPI_COMM_WORLD or custom sub-communicators).
+* **MPI Domain Safety:** When code executes within a distributed MPI framework, design operations with proper communicator awareness (MPI_COMM_WORLD or custom sub-communicators).
 * **Deadlock Prevention:** When organizing message passing, ensure matching non-blocking pairs (MPI_Isend / MPI_Irecv with strict MPI_Waitall tracking) or collective abstractions over raw point-to-point sequences to eliminate operational synchronization hangs.
 * **Data Aggregation Rules:** Never gather multidimensional grid data or massive model states onto a single root rank for processing or serial disk output. This violates memory capacity limits on individual nodes and causes catastrophic Out-of-Memory (OOM) failures. Rely on distributed computation and parallel I/O.
 
 ### 5. Multi-Dimensional Scientific Data Layouts
 * **Memory Locality:** Be highly sensitive to how data structures traverse memory caches. Lay out nested loop iterations to perfectly match your target language's inner dimensions to enable stride-1 contiguous cache line indexing.
 * **Row vs. Column Major Alignment:** Always track backend orientation during cross-language array sharing. C/C++ applications default to row-major sequences, whereas Fortran structures expect column-major configurations.
-* **The Interoperability Mandate:** For all modern C++ and Fortran handshakes, enforce zero-copy array views by coupling C++23's std::mdspan configuration containing an explicit std::layout_left blueprint to natively align data layouts to Fortran spatial arrays.
+* **The Interoperability Mandate:** For C++ and Fortran interoperability, verify type, shape, stride, ownership, and layout; use supported views where suitable.
 
 ### 6. Security & Federal Compliance
 As a federal information system, security is paramount. Copilot must actively prevent the introduction of vulnerabilities.
@@ -80,21 +80,21 @@ When assisting with Git workflows, Pull Requests, or CI/CD configuration files (
 
 * **Conventional Commits:** When generating commit messages, use the Conventional Commits specification (e.g., feat:, fix:, refactor:, perf:).
 * **Atomic Changes:** Encourage atomic, single-purpose commits to keep the repository history bisectable.
-* **Test Generation First:** When writing new CI/CD workflow files, always ensure that testing and linting jobs are executed before any compilation or deployment steps. Assume a strict gateway where failing tests block operational merges.
+* **Test Generation First:** When writing new CI/CD workflow files, use the project’s build and test dependency order and ensure relevant checks gate deployment.
 
-### 7.1 EE2 Compliance Workflow (Required)
-For any generated workflow (CI/CD or operational job chain), enforce the following gate order:
+### 7.1 EE2 Compliance Workflow (NCO/WCOSS delivery)
+For NCO/WCOSS delivery workflows, apply relevant documented operational requirements. Adapt CI checks to the project and its environment:
 
 1. **Environment Validation:** Verify required modules, environment variables, and input paths are present before compute steps.
 2. **Static Quality Gates:** Run formatting/linting checks and fail immediately on violations.
-3. **Test Gates:** Run unit/integration tests before any packaging, artifact publication, or deployment step.
+3. **Test Gates:** Build prerequisites as needed, then run unit/integration tests before artifact publication or deployment.
 4. **EE2 Policy Gates:** Validate output destinations and execution model rules (no background processing, approved paths, restart behavior where required).
 5. **Build/Package/Deploy:** Execute only if all prior gates pass.
 
 * **Failure Handling:** Any failing gate must stop the workflow and emit a clear `FATAL ERROR:`-prefixed message in logs where applicable.
 
 ### 8. Global Quality Gates & Scientific Hygiene
-* **Deterministic Output:** Scientific results must be completely reproducible. Avoid non-deterministic algorithms, race conditions, or unseeded random state initialization.
+* **Deterministic Output:** Define reproducibility requirements and numerical tolerances for the project; avoid unintended races and record random seeds when needed.
 * **Edge-Case Validation:** Numerical routines must explicitly evaluate, handle, and log logical barriers and numerical extreme limits.
 * **Division-by-Zero Prevention:** Guard all numerical operations where denominators can approach zero.
 * **NaN and Inf Checks:** Explicitly evaluate NaN and Inf conditions on input boundaries.

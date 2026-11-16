@@ -1,5 +1,7 @@
 # Issue Templates
 
+> Tool names and CLI commands below are examples. Prefer an available authorized GitHub integration; use `gh` only when installed and authenticated. If the required capability is unavailable, report that limitation.
+
 Copy and customize these templates for issue bodies.
 
 ## Bug Report Template

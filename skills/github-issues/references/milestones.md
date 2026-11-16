@@ -1,5 +1,7 @@
 # Milestones
 
+> Tool names and CLI commands below are examples. Prefer an available authorized GitHub integration; use `gh` only when installed and authenticated. If the required capability is unavailable, report that limitation.
+
 Use milestones to group related issues into a deliverable unit of work.
 
 Milestones can be read and managed through the GitHub REST API.

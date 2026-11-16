@@ -711,8 +711,22 @@ if [ -f "$LOCK_FILE" ]; then
     if printf '%s\n' "$DESIRED_PATHS" | grep -qxF -- "$pth"; then
       continue                       # desired loop writes its lock line
     fi
+    if [ "$typ" = instruction-file ]; then
+      # Only prune stale files for instruction adapters selected in this run.
+      # Other agents' destinations stay recorded and untouched.
+      if printf '%s\n' "$FILE_DIRS" | grep -qxF -- "$(dirname "$pth")"; then
+        if remove_entry "$line"; then
+          sum_note "$pth" removed 1
+        else
+          fail_apply "failed to remove stale managed content for $pth"
+        fi
+      else
+        printf '%s\n' "$line" >> "$LOCK_NEW"
+      fi
+      continue
+    fi
     if [ "$typ" != skill ]; then
-      printf '%s\n' "$line" >> "$LOCK_NEW"   # instruction/block entries are managed below
+      printf '%s\n' "$line" >> "$LOCK_NEW"   # managed blocks are handled below
       continue
     fi
     if ! source_in_scope "$src"; then

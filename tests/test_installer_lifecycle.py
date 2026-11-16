@@ -35,6 +35,42 @@ class TestIdempotence(InstallerTestCase):
 class TestCatalogChange(InstallerTestCase):
     """US2: content of an edited catalog refreshes; deleted leaves prune."""
 
+    def test_instruction_rename_preserves_user_edits_and_uninstall(self) -> None:
+        cat = self.make_catalog_copy()
+        source = cat / ".github/instructions"
+        old = source / "migration-old.instructions.md"
+        old.write_text("---\ndescription: migration\napplyTo: '**/*'\n---\nOld content\n")
+        proj = self.make_project()
+        self.run_installer(proj, "--agents", "copilot", "--domains", "literature-search", install_sh=cat / "install.sh")
+        target = Path(proj) / ".github/instructions/migration-old.instructions.md"
+        target.write_text(target.read_text() + "user edit\n")
+        old.rename(source / "migration-new.instructions.md")
+        self.run_installer(proj, "--agents", "copilot", "--domains", "literature-search", install_sh=cat / "install.sh", check_rc=None)
+        self.assertIn("user edit", target.read_text())
+        self.assertTrue((target.parent / "migration-new.instructions.md").exists())
+        self.run_installer(proj, "--agents", "copilot", "--uninstall", install_sh=cat / "install.sh", check_rc=None)
+        self.assertIn("user edit", target.read_text())
+
+    def test_instruction_rename_prunes_only_managed_stale_file(self) -> None:
+        cat = self.make_catalog_copy()
+        source = cat / ".github/instructions"
+        old = source / "migration-old.instructions.md"
+        old.write_text("---\ndescription: migration\napplyTo: '**/*'\n---\nOld content\n")
+        proj = self.make_project()
+        self.run_installer(proj, "--agents", "copilot,cursor", "--domains", "literature-search", install_sh=cat / "install.sh")
+        target = Path(proj) / ".github/instructions"
+        cursor_old = Path(proj) / ".cursor/rules/migration-old.mdc"
+        foreign = target / "my-own.instructions.md"
+        foreign.write_text("user-owned\n")
+        old.rename(source / "migration-new.instructions.md")
+        self.run_installer(proj, "--agents", "copilot", "--domains", "literature-search", install_sh=cat / "install.sh")
+        self.assertFalse((target / "migration-old.instructions.md").exists())
+        self.assertTrue((target / "migration-new.instructions.md").is_file())
+        self.assertTrue(cursor_old.is_file(), "unselected adapter must remain untouched")
+        self.assertEqual(foreign.read_text(), "user-owned\n")
+        self.run_installer(proj, "--agents", "copilot", "--uninstall", install_sh=cat / "install.sh")
+        self.assertEqual(foreign.read_text(), "user-owned\n")
+
     def test_t021_leaf_edit_refreshes_and_deletion_prunes(self) -> None:
         cat = self.make_catalog_copy()
         proj = self.make_project()

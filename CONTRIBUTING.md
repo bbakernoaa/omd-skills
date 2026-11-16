@@ -22,9 +22,9 @@ Skills are organized by domain in the `skills/` directory:
   Scholar, Google Scholar, and Earth-system-modeling journal searches
 - **Standards (1):** `skills/omd-standards/` for operational production standards
   (`ee2-standards` — NCO Environmental Equivalence)
-- **Development workflows (8):** top-level skills under `skills/` for Git commits
+- **Development workflows (9):** top-level skills under `skills/` for documentation maintenance, Git commits
   and Git Flow branches, GitHub issues and releases, GitHub Actions efficiency,
-  hardening, and runtime upgrades, and prompt authoring (`git-commit`,
+  hardening, and runtime upgrades, and prompt authoring (`doc-maintenance`, `git-commit`,
   `git-flow-branch-creator`, `github-actions-efficiency`,
   `github-actions-hardening`, `github-actions-runtime-upgrade-conventions`,
   `github-issues`, `github-release`, `prompt-optimizer`)
@@ -471,3 +471,9 @@ Contributors are recognized through:
 - Listing in OMD model-development and HPC user-community channels
 
 We value all contributions, including new skills, improvements, documentation, and feedback.
+
+### Instruction delivery and verification
+
+Name installable instruction files `*.instructions.md` in `.github/instructions/`, with a `description` and an `applyTo` scope. The installer places Copilot files verbatim, converts Cursor rules, and includes guidance in managed blocks for Claude, Codex, OpenCode, and Gemini. Test discovery using explicit expected filenames, and check that updates and uninstall preserve local edits. Apply NCO/WCOSS delivery rules only to their intended target.
+
+Pull requests run applicable checks; push workflows cover `develop` and `main` with their configured path filters. The skill compatibility profiles are static checks, not agent CLI or model executions; full-catalog push/manual skill validation is nonblocking, while tool tests can fail the workflow. When reviewing a change, record whether scenarios were inspected statically, exercised in an agent, or run against live services. Include a research and an NCO target, an existing and a new build, and GitHub capability present and absent where relevant. Report unavailable checks as not run.
