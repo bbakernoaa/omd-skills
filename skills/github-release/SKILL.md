@@ -325,11 +325,8 @@ Inline escape sequences like `\n` are not interpreted as newlines by PowerShell 
 as literal text in the PR. Using a file ensures proper markdown formatting.
 
 ```bash
-gh pr create \
-  --base main \
-  --head release/vX.Y.Z \
-  --title "Release vX.Y.Z" \
-  --body "$(cat <<'EOF'
+# Set RELEASE_BASE to the intended, verified release target branch.
+cat > release_pr_body.md <<'EOF'
 ## Release vX.Y.Z
 
 This PR prepares the **vX.Y.Z** release.
@@ -341,14 +338,9 @@ This PR prepares the **vX.Y.Z** release.
 - [ ] Changelog reviewed
 - [ ] Version bump verified
 - [ ] CI passing
-
-After merging, create the tag on the merge commit:
-\`\`\`
-git tag vX.Y.Z <merge-commit-sha>
-git push origin vX.Y.Z
-\`\`\`
 EOF
-)"
+gh pr create --base "$RELEASE_BASE" --head release/vX.Y.Z \
+  --title "Release vX.Y.Z" --body-file release_pr_body.md
 ```
 
 ````PowerShell
@@ -375,7 +367,7 @@ git push origin vX.Y.Z
 
 # Write to file and use --body-file (do NOT use inline --body with escape sequences)
 $prBody | Out-File -FilePath release_pr_body.md -Encoding utf8 -NoNewline
-gh pr create --base main --head release/vX.Y.Z --title "Release vX.Y.Z" --body-file release_pr_body.md
+gh pr create --base $env:RELEASE_BASE --head release/vX.Y.Z --title "Release vX.Y.Z" --body-file release_pr_body.md
 ````
 
 Paste the changelog section into the PR body's "What's included" block (or leave placeholder for manual review).

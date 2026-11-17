@@ -1,0 +1,9 @@
+# Research: Instruction and Maintenance Improvements
+
+- **Instruction discovery:** The reviewed `tools/installer/catalog.sh` selects `*.instructions.md`; `ee2-standards.md` and `hpc-libraries.md` do not match. Prefer renaming to the existing convention over broadening discovery because the Copilot adapter copies matching files verbatim and Cursor converts that family. Update references and verify managed-file migration. Existing tests that derive expected names using the same glob cannot detect the omission.
+- **Target routing:** The EE2 skill distinguishes NCO/WCOSS from research, while the master instruction declares a universal EE2 baseline. Align on explicit target scope; source-check the resulting requirements. Do not infer that every portable recommendation is a mandatory operational standard.
+- **Build tools:** User states OMD generally uses CMake. Respect an existing project build, with CMake as the usual default for an otherwise unspecified OMD project.
+- **Branches:** The reviewed fork's default branch is `develop`; all four reviewed workflows specify `main` for push. Add `develop` while preserving `main` until upstream maintenance conventions are confirmed. PR triggers and push triggers serve different paths.
+- **Validation:** The skill-validation workflow explicitly states that its profile checks are static and do not run agent CLIs or models. Retain those checks and add clearly labeled behavior scenarios; actual client execution depends on availability.
+- **Reference projects:** Use awesome-copilot for discoverability and contribution patterns and Spec Kit for traceability, not as a feature set to replicate.
+- **Outstanding evidence:** Recheck the branch head and upstream branch policy, client availability, and live NCO/RDHPCS sources at implementation time. These are verification dependencies, not claims of completed research.

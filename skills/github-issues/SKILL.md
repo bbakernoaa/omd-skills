@@ -5,7 +5,7 @@ description: 'Create, update, and manage GitHub issues using MCP tools. Use this
 
 # GitHub Issues
 
-Manage GitHub issues using the `@modelcontextprotocol/server-github` MCP server.
+Use the available authorized GitHub integration for the requested operation. Tool names and capabilities vary by client; the namespace below is an example, not a prerequisite. If the integration cannot perform an operation, use `gh` only when installed, authenticated, and authorized. Otherwise report the unavailable capability without claiming success.
 
 ## Available Tools
 
@@ -18,12 +18,12 @@ Manage GitHub issues using the `@modelcontextprotocol/server-github` MCP server.
 | `mcp__github__search_issues` | Search issues across repos using GitHub search syntax |
 | `mcp__github__projects_list` | List projects, project fields, project items, status updates |
 | `mcp__github__projects_get` | Get details of a project, field, item, or status update |
-| `mcp__github__projects_write` | Add/update/delete project items, create status updates |
 
 ### MCP Tools (write operations)
 
 | Tool | Purpose |
 |------|---------|
+| `mcp__github__projects_write` | Add/update/delete project items, create status updates |
 | `mcp__github__issue_write` | Create or update an issue (methods: create, update). Supports title, body, type, labels, assignees, milestone, and issue fields |
 | `mcp__github__add_issue_comment` | Add a comment or a reaction to an issue |
 | `mcp__github__sub_issue_write` | Add, remove, or reprioritize a sub-issue |
@@ -47,12 +47,12 @@ Manage GitHub issues using the `@modelcontextprotocol/server-github` MCP server.
 1. **Determine action**: Create, update, or query?
 2. **Gather context**: Get repo info, existing labels, milestones if needed
 3. **Structure content**: Use appropriate template from [references/templates.md](references/templates.md)
-4. **Execute**: Use MCP tools for reads, `gh api` for writes
+4. **Execute**: Use available authorized integration tools for reads and writes; use `gh api` only as an available fallback
 5. **Confirm**: Report the issue URL to user
 
 ## Creating Issues
 
-Use `gh api` to create issues. This supports all parameters including issue types.
+Prefer the connected integration when it supports creation; the following `gh api` example is a fallback when available.
 
 ```bash
 gh api repos/{owner}/{repo}/issues \
@@ -110,7 +110,7 @@ Always use the templates in [references/templates.md](references/templates.md). 
 
 ## Updating Issues
 
-Use `gh api` with PATCH:
+Use the connected integration when available; otherwise, if `gh` is available and authorized, use PATCH:
 
 ```bash
 gh api repos/{owner}/{repo}/issues/{number} \

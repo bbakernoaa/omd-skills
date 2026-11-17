@@ -1,5 +1,7 @@
 # Issue Fields
 
+> Tool names and CLI commands below are examples. Prefer an available authorized GitHub integration; use `gh` only when installed and authenticated. If the required capability is unavailable, report that limitation.
+
 Issue fields are custom metadata (dates, text, numbers, single-select) defined at the organization level and set per-issue. They are separate from labels, milestones, and assignees. Common examples: Start Date, Target Date, Priority, Impact, Effort.
 
 **Prefer issue fields over project fields.** When you need to set metadata like dates, priority, or status on an issue, use issue fields (which live on the issue itself) rather than project fields (which live on a project item). Issue fields travel with the issue across projects and views, while project fields are scoped to a single project. Only use project fields when issue fields are not available or when the field is project-specific (e.g., sprint iterations).

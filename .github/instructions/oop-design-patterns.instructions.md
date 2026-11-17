@@ -10,14 +10,14 @@ These instructions configure GitHub Copilot to prioritize Gang of Four (GoF) Des
 
 ## Core Architectural Philosophy
 
-- **Program to an Interface, not an Implementation:** Always favor abstract classes or interfaces over concrete implementations. Use dependency injection to provide concrete instances.
+- **Program to an Interface, not an Implementation:** Use abstractions and dependency injection when they simplify a real variation or test boundary; prefer simple concrete code otherwise.
 - **Favor Object Composition over Class Inheritance:** Use composition to combine behaviors dynamically at runtime. Avoid deep inheritance trees. Use Delegation where appropriate to reuse behavior without breaking encapsulation.
 - **Encapsulate What Varies:** Identify the aspects of the application that vary and separate them from what stays the same. Use patterns like Strategy, State, or Bridge to isolate these variations.
 - **Loose Coupling:** Minimize direct dependencies between classes. Use Mediator, Observer, or abstract factories to keep components decoupled.
 
 ## Creational Patterns Guidelines
 
-When generating code that involves object creation or instantiation, apply these patterns to decouple the system from how its objects are created:
+Consider these patterns when they address a real need to decouple the system from how its objects are created:
 
 - **Abstract Factory:** Use when a system must be configured with one of multiple families of related products (e.g., cross-platform UI widgets). Ensure clients only interact with the abstract factory and abstract product interfaces.
 - **Factory Method:** Use when a class cannot anticipate the class of objects it must create. Defer instantiation to subclasses.
@@ -27,7 +27,7 @@ When generating code that involves object creation or instantiation, apply these
 
 ## Structural Patterns Guidelines
 
-When generating code that defines how classes and objects are composed to form larger structures, apply these patterns:
+Consider these patterns when composition addresses a real need:
 
 - **Adapter:** Use to make incompatible interfaces work together. Prefer Object Adapters (using composition) over Class Adapters (using multiple inheritance) for greater flexibility.
 - **Bridge:** Use to separate an abstraction from its implementation so the two can vary independently (e.g., separating a high-level `Window` concept from platform-specific `WindowImpl` logic).
@@ -39,7 +39,7 @@ When generating code that defines how classes and objects are composed to form l
 
 ## Behavioral Patterns Guidelines
 
-When generating code involving algorithms, control flow, or communication between objects, apply these patterns:
+Consider these patterns when they make behavior clearer:
 
 - **Strategy:** Use to define a family of algorithms, encapsulate each one, and make them interchangeable. Eliminate complex conditional logic (`switch`/`if-else`) that selects behavior by delegating to a Strategy object.
 - **Observer:** Use to define a one-to-many dependency where a change in one object (Subject) automatically notifies and updates others (Observers). Keep subjects and observers loosely coupled.
@@ -55,7 +55,7 @@ When generating code involving algorithms, control flow, or communication betwee
 ## Code Generation Rules for Copilot
 
 - **Pattern Recognition:** When prompted to solve a problem that maps to a GoF pattern (e.g., "I need a way to undo this action", "I have multiple ways to calculate taxes"), explicitly mention the pattern you are applying in comments.
-- **Interface First:** Generate the interface or abstract base class *before* generating concrete implementations.
+- **Interface First:** Introduce an interface or abstract base only when it adds value.
 - **Immutability & Encapsulation:** Make fields `private` by default. Provide getters/setters only when necessary. Favor immutable objects.
 - **Naming Conventions:** Use pattern names in class names where it aids understanding (e.g., `TaxCalculationStrategy`, `ButtonDecorator`, `WidgetFactory`), but keep names natural to the domain when appropriate.
 - **Avoid God Classes:** Break large, complex classes into smaller, focused classes coordinating via a Mediator or composed of smaller Strategy objects.

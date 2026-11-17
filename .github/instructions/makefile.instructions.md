@@ -273,7 +273,7 @@ endif
 
 ## Clean Targets
 
-- Always provide a `clean` target to remove generated files
+- Provide a `clean` target when appropriate for the project; follow existing build conventions.
 - Declare `clean` as phony to avoid conflicts with a file named "clean"
 - Use `-` prefix with `rm` commands to ignore errors if files don't exist
 - Consider separate `clean` (removes objects) and `distclean` (removes all generated files) targets

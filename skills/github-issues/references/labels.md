@@ -1,5 +1,7 @@
 # Labels
 
+> Tool names and CLI commands below are examples. Prefer an available authorized GitHub integration; use `gh` only when installed and authenticated. If the required capability is unavailable, report that limitation.
+
 Labels are repository-scoped objects with a name, a color, and an optional
 description. Applying a label to an issue and creating a label are separate
 operations, so list a repository's labels before using them rather than assuming

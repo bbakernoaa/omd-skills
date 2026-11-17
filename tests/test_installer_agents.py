@@ -23,6 +23,19 @@ class TestAdapterPlacement(InstallerTestCase):
 
     DOM = ("--domains", "omd-standards,literature-search")
 
+    def test_domain_instruction_delivery_all_adapters(self) -> None:
+        proj = self.make_project()
+        self.run_installer(proj, "--agents", "all", "--mode", "copy", *self.DOM)
+        root = Path(proj)
+        for stem in ("ee2-standards", "hpc-libraries"):
+            self.assertTrue((root / ".github/instructions" / f"{stem}.instructions.md").is_file())
+            self.assertTrue((root / ".cursor/rules" / f"{stem}.mdc").is_file())
+            for filename in ("AGENTS.md", "CLAUDE.md", "GEMINI.md"):
+                self.assertIn(f"Source: .github/instructions/{stem}.instructions.md",
+                              (root / filename).read_text())
+                self.assertIn("NCEP" if stem == "ee2-standards" else "ESMF",
+                              (root / filename).read_text())
+
     def test_copilot_verbatim_skills_and_instructions(self) -> None:
         proj = self.make_project()
         p = self.run_installer(proj, "--agents", "copilot", "--mode", "copy",

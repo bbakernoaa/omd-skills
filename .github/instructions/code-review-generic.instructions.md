@@ -418,7 +418,7 @@ When performing a code review, verify that tests are a deliberate part of the ch
 - **Independence and determinism**: no order dependence, no wall-clock or network reliance, fixed seeds for randomness, temporary files in a scratch directory
 - **Mock at the boundary**: mock external services and filesystems; never mock the logic under test
 - **Numerical honesty**: compare floating-point results with a documented tolerance (`rtol`/`atol`) or bit-reproducibility against a baseline — never with `==`
-- **Parallel and accelerator parity**: results must match between the serial build and the threaded/MPI/GPU build, and across rank and thread counts
+- **Parallel and accelerator parity**: when supported, compare results between the serial build and the threaded/MPI/GPU build and across rank and thread counts using appropriate tolerances
 - **CI enforcement**: tests run in CI on every supported compiler/interpreter version, with warnings-as-errors and, where feasible, a sanitizer build; a failing test blocks merge
 
 ### Examples
@@ -460,9 +460,9 @@ TEST(DiscountTest, AppliesStandardRateBelowPremiumThreshold) {
 
 **Fortran**
 
-- Use `fpm test` (test executables under `test/`, non-zero exit = failure) or a framework: pFUnit (JUnit-style, CMake, MPI-aware), test-drive, or FRUIT; `pytest-fortran` fits teams already living in pytest
+- Use the project’s documented build and test commands; for new OMD projects CMake is the usual default when suitable. Alternatives include fpm or a framework: pFUnit (JUnit-style, CMake, MPI-aware), test-drive, or FRUIT; `pytest-fortran` fits teams already living in pytest
 - Legacy/monolithic codes without a unit-test seam require a **golden-file regression test**: run on a fixed input set, compare against a baseline with documented tolerance, plus a bit-reproducibility check at the same rank count
-- Debug/test builds must use `-fcheck=all` (bounds, do, mem, pointer, recursion), `-ffpe-trap=invalid,zero,overflow`, `-warn`, `-traceback` (oneAPI: `-check all -fpe0 -traceback`); tests run against such a build, not only the optimized `-O3 -ffast-math` production build
+- Debug/test builds should enable supported bounds, floating-point, and traceback diagnostics appropriate to the compiler; use the project’s verified flags and test numerical behavior in the production configuration as well
 - MPI code is tested at `-np 1`, `-np 2`, and a non-square/decomposed rank count, and compared against the serial result
 - Coverage via `gfortran -fprofile-arcs -ftest-coverage` with `gcov`/`gcovr` (line coverage only)
 
@@ -611,7 +611,7 @@ std::string out_path(const std::string &stem) { return stem + ".out"; }
 **Build and tooling**
 
 - Consistent free-form source, file suffixes, and compile flags; interfaces for any `bind(C)` boundary checked against the C declaration
-- Debug/test builds use `-fcheck=all -ffpe-trap=invalid,zero,overflow -warn all -traceback`; optimized builds must not add `-ffast-math`/`-Ofast` unless the numerical tolerance impact is reviewed and accepted
+- Debug/test builds use compiler-supported bounds and floating-point diagnostics; optimized builds must not add `-ffast-math`/`-Ofast` unless the numerical tolerance impact is reviewed and accepted
 
 #### Examples
 
