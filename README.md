@@ -135,6 +135,7 @@ omd-skills/
 │   ├── SKILL.md
 │   └── scripts/skill_search.py
 ├── skills/
+│   ├── address-pr-comments/SKILL.md
 │   ├── doc-maintenance/SKILL.md
 │   ├── git-commit/SKILL.md
 │   ├── git-flow-branch-creator/SKILL.md
